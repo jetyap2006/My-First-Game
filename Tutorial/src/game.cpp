@@ -9,6 +9,7 @@ float player_p_half_size_x = 2.5, player_p_half_size_y = 12.0f;
 float ball_p_x, ball_p_y, ball_dp_x = 150.f, ball_dp_y;
 float ball_half_size = 1;
 
+int player_score_1(0), player_score_2(0);
 
 //Equations of motion : 
 //1) v = u + at;
@@ -38,6 +39,119 @@ internal void simulate_player(float* p, float* dp, float ddp, float dt)
 		*p = -arena_half_size_y + player_p_half_size_y + 0.005 * arena_half_size_y;
 		*dp = 0; // reset the velocity
 
+	}
+
+}
+
+internal void draw_number(int score, float x, float y, float size, u32 color)
+{	
+	bool drew_number = false;
+	float half_size = 0.5f * size;
+	while (score || drew_number == false)
+	{	
+		drew_number = true;
+		int digits = score % 10;
+		score /= 10;
+		
+		switch (digits)
+
+		{
+		case 0:
+		{
+			draw_rect(x - size, y, half_size, size * 2.5f, color);
+			draw_rect(x + size, y, half_size, size * 2.5f, color);
+			draw_rect(x, y + 2 * (size), half_size, half_size, color);
+			draw_rect(x, y - 2 * (size), half_size, half_size, color);
+			x -= 4.f;
+		} break;
+
+		case 1:
+		{
+			draw_rect(x, y, half_size, size * 2.5f, color);
+			x -= 4.f;
+		}break;
+
+		case 2: {
+			draw_rect(x, y + 2 * (size), 1.5 * size, half_size, color);
+			draw_rect(x, y - 2 * (size), 1.5 * size, half_size, color);
+			draw_rect(x, y, 1.5 * size, half_size, color);
+			draw_rect(x + size, y + size, half_size, 0.5 * 2.5 * size, color);
+			draw_rect(x - size, y - size, half_size, 0.5 * 2.5 * size, color);
+			x -= 4.f;
+		}break;
+
+		case 3:
+		{
+			draw_rect(x, y + 2 * (size), 1.5 * size, half_size, color);
+			draw_rect(x, y - 2 * (size), 1.5 * size, half_size, color);
+			draw_rect(x, y, 1.5 * size, half_size, color);
+			draw_rect(x + size, y + size, half_size, 0.5 * 2.5 * size, color);
+			draw_rect(x + size, y - size, half_size, 0.5 * 2.5 * size, color);
+			x -= 4.f;
+
+		}break;
+
+		case 4:
+		{
+			draw_rect(x + size, y, half_size, size * 2.5f, color);
+			draw_rect(x, y, 1.5 * size, half_size, color);
+			draw_rect(x - size, y + size, half_size, 0.5 * 2.5 * size, color);
+			x -= 4.f;
+
+		}break;
+
+		case 5:
+		{
+			draw_rect(x, y + 2 * (size), 1.5 * size, half_size, color);
+			draw_rect(x, y - 2 * (size), 1.5 * size, half_size, color);
+			draw_rect(x, y, 1.5 * size, half_size, color);
+			draw_rect(x - size, y + size, half_size, 0.5 * 2.5 * size, color);
+			draw_rect(x + size, y - size, half_size, 0.5 * 2.5 * size, color);
+			x -= 4.f;
+
+		}break;
+
+		case 6:
+		{
+			draw_rect(x, y + 2 * (size), 1.5 * size, half_size, color);
+			draw_rect(x, y - 2 * (size), 1.5 * size, half_size, color);
+			draw_rect(x, y, 1.5 * size, half_size, color);
+			draw_rect(x - size, y, half_size, size * 2.5f, color);
+			draw_rect(x + size, y - size, half_size, 0.5 * 2.5 * size, color);
+			x -= 4.f;
+
+		}break;
+		case 7:
+		{
+			draw_rect(x, y + 2 * (size), 1.5 * size, half_size, color);
+			draw_rect(x + size, y, half_size, size * 2.5f, color);
+			x -= 4.f;
+
+		}break;
+		case 8:
+		{
+			draw_rect(x, y + 2 * (size), 1.5 * size, half_size, color);
+			draw_rect(x, y - 2 * (size), 1.5 * size, half_size, color);
+			draw_rect(x, y, 1.5 * size, half_size, color);
+			draw_rect(x - size, y, half_size, size * 2.5f, color);
+			draw_rect(x + size, y, half_size, size * 2.5f, color);
+			x -= 4.f;
+
+		}break;
+		case 9:
+		{
+			draw_rect(x, y + 2 * (size), 1.5 * size, half_size, color);
+			draw_rect(x, y - 2 * (size), 1.5 * size, half_size, color);
+			draw_rect(x, y, 1.5 * size, half_size, color);
+			draw_rect(x - size, y + size, half_size, 0.5 * 2.5 * size, color);
+			draw_rect(x + size, y, half_size, size * 2.5f, color);
+			x -= 4.f;
+
+		}break;
+
+		default:
+			break;
+		}
 	}
 
 }
@@ -80,7 +194,7 @@ internal void simulate_game(Input* input , float dt)
 
 	//player_ddp_2 -= player_dp_2 * 3.0f; //friction;
 	//player_p_2 = player_p_2 + player_dp_2 * dt + 0.5 * (player_ddp_2 * dt * dt); //physics implementations
-	//player_dp_2 = player_dp_2 + player_ddp_2 * dt;
+	/*player_dp_2 = player_dp_2 + player_ddp_2 * dt;*/
 
 	////upper collision
 	//if (player_p_2 + player_p_half_size_y > arena_half_size_y) // if the position of player plus the half size of the player is greater than the arena half size , we are colliding
@@ -101,13 +215,14 @@ internal void simulate_game(Input* input , float dt)
 	//
 	ball_p_x += ball_dp_x * dt;
 	ball_p_y += ball_dp_y * dt;
+	
 
 	{  //Simulate ball
 
 		if (ball_p_x + ball_half_size > 80 - player_p_half_size_x &&          //ball collision
-			ball_p_x - ball_half_size < 80 + player_p_half_size_x &&
-			ball_p_y + ball_half_size > player_p_2 - player_p_half_size_y &&   //if the highest y position of the ball is greater than the lowest y position of the player stick
-			ball_p_y - ball_half_size < player_p_2 + player_p_half_size_y)     // if the lowest y position of the ball is 
+		ball_p_x - ball_half_size < 80 + player_p_half_size_x &&
+		ball_p_y + ball_half_size > player_p_2 - player_p_half_size_y &&   //if the highest y position of the ball is greater than the lowest y position of the player stick
+		ball_p_y - ball_half_size < player_p_2 + player_p_half_size_y)     // if the lowest y position of the ball is 
 		{
 			ball_p_x = 80 - player_p_half_size_x - ball_half_size;
 			ball_dp_x *= -1;
@@ -134,24 +249,39 @@ internal void simulate_game(Input* input , float dt)
 		}
 
 
-		if (ball_p_x + ball_half_size > arena_half_size_x || ball_p_x - ball_half_size < -arena_half_size_x)  // if it hits the left or right wing of the arena
+		if (ball_p_x + ball_half_size > arena_half_size_x)  // if it hits the left or right wing of the arena
 		{
 			ball_p_x = 0.0f;
 			ball_dp_x *= -1;
 			ball_dp_y = 0.0f;
 			ball_p_y = 0.0f;
+			player_score_1++;
+
+		}
+
+		if (ball_p_x - ball_half_size < -arena_half_size_x)
+		{
+			ball_p_x = 0.0f;
+			ball_dp_x *= 1;
+			ball_dp_y = 0.0f;
+			ball_p_y = 0.0f;
+			player_score_2++;
 		}
 
 	}
-	
 	//Rendering
-	draw_rect(0, 0, 85, 45, 0xfffab40);
-	
+	draw_rect(0, 0, 85, 45, 0xfffab40); // arena
+
+	/*draw_rect(-20 - 1, 40, 0.5, 2.5, 0xbbffbb);*/
+
+	//Scoreboard
+	draw_number(player_score_1, -20, 40.f, 1.f, 0xbbffbb);
+	draw_number(player_score_2, 20, 40.f, 1.f, 0xbbffbb);
+
 	draw_rect(ball_p_x, ball_p_y, ball_half_size, ball_half_size, 0xffffff); //ball
 
-	draw_rect(-80, player_p_1 , player_p_half_size_x, player_p_half_size_y, 0xff0000);
-	draw_rect(80, player_p_2 , player_p_half_size_x, player_p_half_size_y, 0xff0000);
+	draw_rect(-80, player_p_1, player_p_half_size_x, player_p_half_size_y, 0xff0000);
+	draw_rect(80, player_p_2, player_p_half_size_x, player_p_half_size_y, 0xff0000);
 
 
-	
 }

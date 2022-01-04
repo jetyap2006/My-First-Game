@@ -99,27 +99,27 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		while (PeekMessage(&message, window, 0, 0, PM_REMOVE)) {
 
 			switch (message.message) {
-				case WM_KEYUP:
-				case WM_KEYDOWN: {
-					u32 vk_code = (u32)message.wParam;
-					bool is_down = ((message.lParam & (1 << 31)) == 0);
+			case WM_KEYUP:
+			case WM_KEYDOWN: {
+				u32 vk_code = (u32)message.wParam;
+				bool is_down = ((message.lParam & (1 << 31)) == 0);
 
-					switch (vk_code)
-					{
-						process_key(BUTTON_UP, VK_UP);
-						process_key(BUTTON_DOWN, VK_DOWN);
-						process_key(BUTTON_W, 0x57);
-						process_key(BUTTON_S, 0x53);
-					}
-					
-					break;
-				}  
-
-				default: {
-					TranslateMessage(&message);
-					DispatchMessage(&message);
-					break;
+				switch (vk_code)
+				{
+					process_key(BUTTON_UP, VK_UP);
+					process_key(BUTTON_DOWN, VK_DOWN);
+					process_key(BUTTON_W, 0x57);
+					process_key(BUTTON_S, 0x53);
 				}
+
+				break;
+			}
+
+			default: {
+				TranslateMessage(&message);
+				DispatchMessage(&message);
+				break;
+			}
 
 			}
 
@@ -136,5 +136,4 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		delta_time = (float)(frame_end_time.QuadPart - frame_begin_time.QuadPart) / perf_freq.QuadPart;
 		frame_begin_time = frame_end_time;
 	}
-
 }
