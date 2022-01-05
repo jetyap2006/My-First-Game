@@ -13,6 +13,7 @@ enum
 	BUTTON_RIGHT,
 	BUTTON_W,
 	BUTTON_S,
+	BUTTON_ENTER,
 
 	BUTTON_COUNT // Should be last the last item
 };

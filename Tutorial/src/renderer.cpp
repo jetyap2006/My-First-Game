@@ -64,3 +64,8 @@ internal void draw_rect(float x, float y, float half_size_x /*half size of the r
 
 	draw_rect_inpixels(x0, y0, x1, y1, color);
 }
+
+internal void draw_text(const char* text)
+{
+
+}

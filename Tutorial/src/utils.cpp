@@ -1,7 +1,7 @@
 #define process_key(d,vk)\
 case vk:{\
-input.buttons[d].changed = is_down != input.buttons[d].is_down;\
-input.buttons[d].is_down = is_down;\
+	input.buttons[d].changed = is_down != input.buttons[d].is_down;\
+	input.buttons[d].is_down = is_down;\
 }break;
 
 
