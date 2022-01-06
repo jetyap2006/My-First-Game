@@ -6,7 +6,7 @@ float player_p_1, player_dp_1; // d = derivative;
 float player_p_2, player_dp_2;
 float arena_half_size_x = 85.0f, arena_half_size_y = 45.0f;
 float player_p_half_size_x = 2.5, player_p_half_size_y = 12.0f;
-float ball_p_x, ball_p_y, ball_dp_x = 50.f, ball_dp_y;
+float ball_p_x, ball_p_y, ball_dp_x = 150.f, ball_dp_y;
 float ball_half_size = 1;
 
 int player_score_1(0), player_score_2(0);
@@ -25,6 +25,7 @@ GameMode game_mode;
 int hot_button;
 bool enemy_is_ai;
 bool gameplay_delay;
+float ball_ddp_x = 0.0f;
 
 internal void simulate_player(float* p, float* dp, float ddp, float dt)
 {
@@ -211,65 +212,69 @@ internal void simulate_game(Input* input , float dt)
 		simulate_player(&player_p_1, &player_dp_1, player_ddp_1, dt);
 		simulate_player(&player_p_2, &player_dp_2, player_ddp_2, dt);
 
-		ball_p_x += ball_dp_x * dt;
 		ball_p_y += ball_dp_y * dt;
+		ball_p_x = ball_p_x + ball_dp_x  * dt + (ball_ddp_x * dt * dt) * 0.5;
+		ball_dp_x = ball_dp_x + ball_ddp_x * dt;
 
 
 		{  //Simulate ball
 
 
-			if (ball_p_x + ball_half_size > 80 - player_p_half_size_x &&          //ball collision
-				ball_p_x - ball_half_size < 80 + player_p_half_size_x &&
-				ball_p_y + ball_half_size > player_p_2 - player_p_half_size_y &&   //if the highest y position of the ball is greater than the lowest y position of the player stick
-				ball_p_y - ball_half_size < player_p_2 + player_p_half_size_y)     // if the lowest y position of the ball is 
+			if (ball_p_x + ball_half_size >= 80 - player_p_half_size_x &&          //ball collision
+				ball_p_x - ball_half_size <= 80 + player_p_half_size_x &&
+				ball_p_y + ball_half_size >= player_p_2 - player_p_half_size_y &&   //if the highest y position of the ball is greater than the lowest y position of the player stick
+				ball_p_y - ball_half_size <= player_p_2 + player_p_half_size_y)     
 			{
 				ball_p_x = 80 - player_p_half_size_x - ball_half_size;
-				ball_dp_x += 10.f;
 				ball_dp_x *= -1;
-				ball_dp_y = (ball_p_y - player_p_2) * 0.05f *ball_dp_x ;
+				ball_dp_y = (ball_p_y - player_p_2) * 10 ;
+				ball_ddp_x -= 20;
 				
 			}
 
-			else if (ball_p_x - ball_half_size < -80 + player_p_half_size_x &&          //ball collision
-				ball_p_x + ball_half_size > -80 - player_p_half_size_x &&
-				ball_p_y - ball_half_size < player_p_1 + player_p_half_size_y &&   //if the highest y position of the ball is greater than the lowest y position of the player stick
-				ball_p_y + ball_half_size > player_p_1 - player_p_half_size_y)     // if the lowest y position of the ball is 
+			else if (ball_p_x - ball_half_size <= -80 + player_p_half_size_x &&          //ball collision
+				ball_p_x + ball_half_size >= -80 - player_p_half_size_x &&
+				ball_p_y - ball_half_size <= player_p_1 + player_p_half_size_y &&   //if the highest y position of the ball is greater than the lowest y position of the player stick
+				ball_p_y + ball_half_size >= player_p_1 - player_p_half_size_y)      
 			{
 				ball_p_x = -80 + player_p_half_size_x + ball_half_size;
-				ball_dp_x -= 10.f;
 				ball_dp_x *= -1;
-				ball_dp_y = (ball_p_y - player_p_1) * 0.05f *  ball_dp_x ;
+				ball_dp_y = (ball_p_y - player_p_1) * 10 ;
+				ball_ddp_x += 20;
 			}
 
-			if (ball_p_y + ball_half_size > arena_half_size_y)  // if it hits the upper or the bottom of the arena 
+			if (ball_p_y + ball_half_size >= arena_half_size_y)  // if it hits the upper or the bottom of the arena 
 			{
-				ball_dp_y *= -1;
+				ball_dp_y *= -1.1;
+			
 			}
-			else if (ball_p_y - ball_half_size < -arena_half_size_y)
+			else if (ball_p_y - ball_half_size <= -arena_half_size_y)
 			{
-				ball_dp_y *= -1;
+				ball_dp_y *= -1.1;
 			}
 
 
-			if (ball_p_x + ball_half_size > arena_half_size_x)  // if it hits the left or right wing of the arena
+			if (ball_p_x + ball_half_size >= arena_half_size_x)  // if it hits the left or right wing of the arena
 			{
 				ball_p_x = 0.0f;
 				ball_dp_y = 0.0f;
 				ball_p_y = 0.0f;
 				player_score_1++;
-				ball_dp_x = 50.f;
+				ball_dp_x = 100.f;
 				ball_dp_x *= -1;
+				ball_ddp_x = 0.0f;
 
 			}
 
-			if (ball_p_x - ball_half_size < -arena_half_size_x)
+			if (ball_p_x - ball_half_size <= -arena_half_size_x)
 			{
 				ball_p_x = 0.0f;
 				ball_dp_y = 0.0f;
 				ball_p_y = 0.0f;
-				ball_dp_x = 50.f;
+				ball_dp_x = 100.f;
 				ball_dp_x *= -1;
 				player_score_2++;
+				ball_ddp_x = 0.0f;
 			}
 
 		}
